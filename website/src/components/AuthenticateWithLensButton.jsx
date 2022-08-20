@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { useAccount, useSignMessage } from "wagmi";
+
 const GET_CHALLENGE = gql`
   query ($request: ChallengeRequest!) {
     challenge(request: $request) {
@@ -18,16 +19,23 @@ const AUTHENTICATION = gql`
   }
 `;
 
+const VERIFY = gql`
+  query ($request: VerifyRequest!) {
+    verify(request: $request)
+  }
+`;
+
 export default function AuthenticateWithLensButton() {
-  const { address, isConnecting, isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const [challenge, setChallenge] = useState("");
   const [signature, setSignature] = useState("");
+
   const [authenticate] = useMutation(AUTHENTICATION, {
     variables: { request: { address, signature } },
     onCompleted: (data) => {
       console.log(`Authentication request result: ${JSON.stringify(data)}`);
-      localStorage.setItem("accessToken", data.authenticate.accessToken);
-      localStorage.setItem("refreshToken", data.authenticate.refreshToken);
+      localStorage.setItem("auth_token", data.authenticate.accessToken);
+      localStorage.setItem("refresh_token", data.authenticate.refreshToken);
     },
   });
 
@@ -42,10 +50,13 @@ export default function AuthenticateWithLensButton() {
     },
   });
 
-  const { loading, error } = useQuery(GET_CHALLENGE, {
+  const { loading } = useQuery(GET_CHALLENGE, {
     onCompleted: (data) => {
       console.log(`Challange received : ${data.challenge.text}`);
       setChallenge(data.challenge.text);
+    },
+    onError: (error) => {
+      console.log(`Error getting challange: ${error}`);
     },
     variables: {
       request: {
