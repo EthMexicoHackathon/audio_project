@@ -12,7 +12,10 @@ export default function ExplorePublicationsTest() {
   return data ? (
     <div>
       {data.explorePublications.items.map((publication) => (
-        <div>{publication.metadata.name}</div>
+        <div>
+          {publication.metadata.name}
+          <audio controls src={publication.metadata.media[0].original.url} />
+        </div>
       ))}
     </div>
   ) : (

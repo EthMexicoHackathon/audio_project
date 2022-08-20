@@ -65,7 +65,6 @@ const App = () => {
         <ConnectKitProvider>
           <BrowserRouter>
             <Navbar />
-            <SignMessageButton />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/explore" element={<ExplorePublicationsTest />} />
