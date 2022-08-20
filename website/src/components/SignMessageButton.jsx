@@ -3,6 +3,14 @@ import { useSignMessage } from "wagmi";
 function SignMessageButton() {
   const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
     message: "gm wagmi frens",
+    onSuccess: (signedMessage) => {
+      console.log("success");
+      console.log(signedMessage);
+    },
+    onError: (error) => {
+      console.log("error");
+      console.log(error);
+    },
   });
 
   return (
