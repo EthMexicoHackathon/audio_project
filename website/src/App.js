@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { WagmiConfig, createClient } from "wagmi";
+import {
+  ConnectKitProvider,
+  ConnectKitButton,
+  getDefaultClient,
+} from "connectkit";
+import { Buffer } from "buffer";
 
-function App() {
+const alchemyId = "WxH_mAU0XciJz4PAFStdOYCvYTnXwTdz";
+if (!window.Buffer) window.Buffer = Buffer;
+
+const client = createClient(
+  getDefaultClient({
+    appName: "Your App Name",
+    alchemyId,
+  })
+);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WagmiConfig client={client}>
+      <ConnectKitProvider>
+        /* Your App */
+        <ConnectKitButton />
+      </ConnectKitProvider>
+    </WagmiConfig>
   );
-}
+};
 
 export default App;
