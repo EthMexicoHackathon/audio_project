@@ -36,6 +36,7 @@ export default function AuthenticateWithLensButton() {
       console.log(`Authentication request result: ${JSON.stringify(data)}`);
       localStorage.setItem("auth_token", data.authenticate.accessToken);
       localStorage.setItem("refresh_token", data.authenticate.refreshToken);
+      window.location.reload();
     },
   });
 
