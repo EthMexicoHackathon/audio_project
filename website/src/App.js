@@ -124,7 +124,7 @@ export default function App () {
     setMessage(
       <>
       <Paragraph>
-        Uploading to <Anchor href="web3.storage" target="_blank" rel="noreferrer">Web3.Storage</Anchor>
+        Uploading to <Anchor href="https://web3.storage" target="_blank" rel="noreferrer">Web3.Storage</Anchor>
       </Paragraph>
       <Spinner />
       </>
@@ -138,7 +138,7 @@ export default function App () {
     setMessage(
       <>
       <Paragraph>
-        CID: <Anchor href={`https://nftstorage.link/ipfs/${rootCid}`} target="_blank" rel="noreferrer">Web3.Storage</Anchor>
+        CID: <Anchor href={`https://nftstorage.link/ipfs/${rootCid}`} target="_blank" rel="noreferrer">{rootCid}</Anchor>
       </Paragraph>
       </>
     );
@@ -147,7 +147,7 @@ export default function App () {
     console.log(await ipfs.pin.add(rootCid));
 
     setTimeout(() => {
-      setMessage()
+      setMessage(null)
     },5000)
   }
 
@@ -240,8 +240,6 @@ export default function App () {
               </Box>
             </Tab>
           </Tabs>
-
-
           <FooterComponent />
 
         </center>
