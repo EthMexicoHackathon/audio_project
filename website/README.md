@@ -1,3 +1,87 @@
+# TheVibes Space
+
+A place where NFTs can play togheter and have fun. Currently playable with NFTs from  Rinkeby, Ethereum, BSC, Avalanche, XDAI, Polygon and Boba network.
+
+Users can also enter as guest (no NFT in wallet / not connected the wallet to the dapp).
+
+Offchain Free to Play (Play for Fun!) game done with [Phaser](https://phaser.io/) using [IPFS pubsub](https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/PUBSUB.md) to allow chat messages between players and show positions/movements in the game.
+
+
+2D Maps were done using tiles from [itch.io](https://itch.io/game-assets/free/tag-tileset) and generated using [map editor](https://www.mapeditor.org/).
+
+
+TheVibes3D done with [Enable3D](https://enable3d.io/), map done from [heightmap](https://i.stack.imgur.com/NvF5e.jpg), assets from [sketchfab](https://sketchfab.com/3d-models/low-poly-office-building-1-c4970cbcb82746fb8c107875e789e270)
+
+
+NFTs lists were get using https://thegraph.com/hosted-service/subgraph/leon-do/xdai-erc721-erc1155 and https://api.thegraph.com/subgraphs/name/quantumlyy/eip721-subgraph-matic (and theirs networks);
+
+Included [UNS Login](https://docs.unstoppabledomains.com/login-with-unstoppable/), user can use its domain as character.
+
+Included [IDX](https://idx.xyz/) to allow users use its [Self.ID](https://self.id/) profile as character and save base's position in the space.
+
+Still a Proof of Concept:
+
+- Is it possible to make a multiplayer game using IPFS pubsub (or frameworks that were constructed on top of IPFS) ?  
+- What are the issues ?
+- How to prevent cheat in the game ?
+- Should the game get the actual map to be used from a smart contract controled by a DAO ?
+- How to allow users play with their own created maps ?
+
+## UNS Login Demo Video
+
+  https://bafybeibh2ht5h3amo7hrmanxswa5mayi5z6itorp6g7skfaehdvzkhcdqm.ipfs.infura-ipfs.io/
+
+## Demo Video
+
+  https://bafybeif2myhdjkp6wa7dww7dyfztdpixdmihlueozpqi6fe22acpssgjze.ipfs.infura-ipfs.io/#/
+
+
+## Demo
+
+Any of URLs
+
+ - https://thevibes--space-crypto.ipns.dweb.link/
+ - https://gateway.pinata.cloud/ipns/thevibes-space.crypto/
+ - https://ipfs.io/ipns/thevibes-space.crypto/
+ - ipns://thevibes-space.crypto/
+
+## Contact
+
+  - Discord: bongador#2753
+  - UNS Email: bongador@protonmail.com
+
+## Testing Guide
+
+### As Guest
+
+  This option can be used by users that does not have NFTs or wallet.
+
+ - Enter the dapp, wait for IPFS load and click "Enter as Guest" button;
+
+ ![Main](https://ipfs.io/ipfs/bafybeiclmddnvdbs3netka3nydfv6nnx52dxwjqgdqhcfwsopjhg2wutxe/main.png "Main")
+
+ - Move using arrows keys
+
+ ![Guest](https://ipfs.io/ipfs/bafybeiclmddnvdbs3netka3nydfv6nnx52dxwjqgdqhcfwsopjhg2wutxe/guest.png "Guest")
+
+
+### Using NFT
+
+  - Connect wallet in the dapp and wait NFTs load (Currently playable with NFTs from  Rinkeby, Ethereum, BSC, Avalanche, XDAI, Polygon but some subgraphs may not be 100% synced with the blockchain)
+
+  - Select your NFT
+
+  ![Select NFT](https://ipfs.io/ipfs/bafybeiclmddnvdbs3netka3nydfv6nnx52dxwjqgdqhcfwsopjhg2wutxe/connected.png "Select NFT")
+
+
+  - Move using arrows keys, touch the top of others to kill them, NFTs from same contract address or guests cant kill each other .
+
+  ![NFT](https://ipfs.io/ipfs/bafybeiclmddnvdbs3netka3nydfv6nnx52dxwjqgdqhcfwsopjhg2wutxe/nftUse.png "NFT")
+
+  ![Guest Died](https://ipfs.io/ipfs/bafybeiclmddnvdbs3netka3nydfv6nnx52dxwjqgdqhcfwsopjhg2wutxe/guestDied.png "Guest Died")
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

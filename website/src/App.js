@@ -1,79 +1,226 @@
-import { createClient, WagmiConfig, chain } from "wagmi";
+import React, { useState, useMemo } from 'react'
 import {
-  ConnectKitProvider,
-  ConnectKitButton,
-  getDefaultClient,
-} from "connectkit";
-import { Buffer } from "buffer";
-import Navbar from "./components/Navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import SignMessageButton from "./components/SignMessageButton";
-import ExplorePublicationsTest from "./pages/ExplorePublicationsTest";
+  Button,
+  Box,
+  Header,
+  Heading,
+  Spinner,
+  Paragraph,
+  Anchor,
+  TextInput,
+  Select,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  Image,
+  Tab,
+  Tabs,
+  Grid,
+  FileInput
+ } from 'grommet';
 
-// this is showing you how you use it with react for example
-// if your using node or something else you can import using
-// @apollo/client/core!
+import { gql } from '@apollo/client'
+import { Web3Storage } from 'web3.storage';
+
+
 import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  ApolloLink,
-  ApolloProvider,
-} from "@apollo/client";
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 
-const httpLink = new HttpLink({ uri: "https://api-mumbai.lens.dev/" });
+import { ethers } from "ethers";
 
-// example how you can pass in the x-access-token into requests using `ApolloLink`
-const authLink = new ApolloLink((operation, forward) => {
-  // Retrieve the authorization token from local storage.
-  // if your using node etc you have to handle your auth different
-  const token = localStorage.getItem("auth_token");
+import makeBlockie from 'ethereum-blockies-base64';
 
-  // Use the setContext method to set the HTTP headers.
-  operation.setContext({
-    headers: {
-      "x-access-token": token ? `Bearer ${token}` : "",
-    },
-  });
+import useWeb3Modal from './hooks/useWeb3Modal';
+import useIPFS from './hooks/useIPFS';
 
-  // Call the next link in the middleware chain.
-  return forward(operation);
-});
+import FooterComponent from './components/Footer';
+import { generateChallenge } from './functions/generate-challenge'
+import { authenticate } from './functions/authenticate'
+import { getProfiles } from './functions/getProfiles'
+import {apolloClient} from './functions/apollo-client';
 
-const apolloClient = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
+export default function App () {
+  const [lensProfile,setLensProfile] = useState();
+  const [lensT,setLensT] = useState();
+  const [profileName,setProfileName] = useState();
+  const [file,setFile] = useState();
+  const [files,setFiles] = useState();
 
-const alchemyId = "WxH_mAU0XciJz4PAFStdOYCvYTnXwTdz";
 
-if (!window.Buffer) window.Buffer = Buffer;
 
-const client = createClient(
-  getDefaultClient({
-    appName: "Your App Name",
-    alchemyId,
-    chains: [chain.polygonMumbai, chain.localhost, chain.hardhat],
-  })
-);
+  const loginLens = async (address) => {
 
-const App = () => {
+    // we request a challenge from the server
+    const challengeResponse = await generateChallenge(address);
+    console.log(challengeResponse.data.challenge.text)
+    // sign the text with the wallet
+    const signer = await provider.getSigner()
+    const signature = await signer.signMessage(challengeResponse.data.challenge.text)
+    console.log(signature)
+    const accessTokens = await authenticate(address, signature);
+    console.log(accessTokens);
+    return(accessTokens)
+    // you now have the accessToken and the refreshToken
+    // {
+    //  data: {
+    //   authenticate: {
+    //    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NDUxMDQyMzEsImV4cCI6MTY0NTEwNjAzMX0.lwLlo3UBxjNGn5D_W25oh2rg2I_ZS3KVuU9n7dctGIU",
+    //    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjB4YjE5QzI4OTBjZjk0N0FEM2YwYjdkN0U1QTlmZkJjZTM2ZDNmOWJkMiIsInJvbGUiOiJyZWZyZXNoIiwiaWF0IjoxNjQ1MTA0MjMxLCJleHAiOjE2NDUxOTA2MzF9.2Tdts-dLVWgTLXmah8cfzNx7sGLFtMBY7Z9VXcn2ZpE"
+    //   }
+    // }
+  }
+  const {
+    provider,
+    coinbase,
+    netId,
+    loadWeb3Modal,
+    logoutOfWeb3Modal
+  } = useWeb3Modal();
+
+  const { ipfs,ipfsErr } = useIPFS();
+
+  const createProfile = async () => {
+    const newLensT = await loginLens(coinbase);
+    setLensT(newLensT);
+    const response = await getProfiles(coinbase);
+    if(response.data.profiles.items.length === 0){
+      //Create Lens Profile
+      const CREATE_PROFILE = `
+        mutation($request: CreateProfileRequest!) {
+          createProfile(request: $request) {
+            ... on RelayerResult {
+              txHash
+            }
+            ... on RelayError {
+              reason
+            }
+                  __typename
+          }
+       }
+       `
+
+      const createLensProfile = (createProfileRequest) => {
+         return apolloClient.mutate({
+          mutation: gql(CREATE_PROFILE),
+          variables: {
+            request: createProfileRequest
+          },
+        });
+      }
+      await createLensProfile({
+        handle: new Date().getTime().toString(),
+      });
+
+    }
+  }
+
+  const uploadFile = async () => {
+    // Upload to web3.storage (filecoin)
+    // User can use his own key soon
+    const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGFDYjNDRDM4RTRFQTVmMEFhNWQwOWM2RTQ1YUYwOGMzRkY2NUYzY0EiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NjEwMzAzNTkzNzYsIm5hbWUiOiJ0ZXN0SVBGUyJ9.HGBuR9-HTY4UX4EB3Imzdocz2JrYURnAYxffiizfXkE"
+    const client = new Web3Storage({ token: testToken });
+    const rootCid = await client.put(files, {
+      name: `Test-${new Date().getTime().toString()}`,
+      maxRetries: 3,
+    });
+    console.log(rootCid)
+    // Pin in your local node (browser node)
+    console.log(await ipfs.pin.add(rootCid));
+  }
+
+  useMemo(async () => {
+    if(coinbase && !lensProfile){
+      const response = await getProfiles(coinbase);
+      if(response.data.profiles.items.length === 0){
+        //Create Lens Profile
+      }
+    }
+  },[coinbase,lensProfile])
+
   return (
-    <WagmiConfig client={client}>
-      <ApolloProvider client={apolloClient}>
-        <ConnectKitProvider>
-          <BrowserRouter>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/explore" element={<ExplorePublicationsTest />} />
-            </Routes>
-          </BrowserRouter>
-        </ConnectKitProvider>
-      </ApolloProvider>
-    </WagmiConfig>
-  );
-};
+        <center>
 
-export default App;
+          <Header background="brand" align="start">
+            <Heading margin="small"></Heading>
+            <Box align="end" pad="medium" alignContent="center">
+            {
+              ipfs && !ipfsErr ?
+              "IPFS Connected" :
+              !ipfs && !ipfsErr ?
+              "Loading IPFS" :
+              ipfsErr &&
+              "Error Loading IPFS"
+            }
+            </Box>
+            <Box align="end" pad="medium" alignContent="center" >
+              {
+                coinbase ?
+                <Button onClick={() => {
+                  logoutOfWeb3Modal();
+                }} label="Disconnect" /> :
+                <Button primary onClick={loadWeb3Modal} label="Connect Wallet" />
+              }
+            </Box>
+          </Header>
+          <Heading level="2">UOU</Heading>
+          {
+            coinbase &&
+            `Connected as ${coinbase}`
+          }
+          <Tabs>
+            <Tab title="Your Profile">
+
+              {
+                !lensProfile &&
+                <>
+                <Box padding="xlarge" align="center">
+                  <TextInput
+                    type="text"
+                    id="textInput"
+                    placeholder="Enter a profile name"
+                    onChange={setProfileName}
+                  />
+                  <Button onClick={createProfile} label="Create Lens Profile" />
+                </Box>
+                </>
+              }
+            </Tab>
+            <Tab title="Upload File">
+              <FileInput
+                name="file"
+                onChange={event => {
+                  const fileList = event.target.files;
+                  setFiles(fileList);
+                  for (let i = 0; i < fileList.length; i += 1) {
+                    const newFile = fileList[i];
+                    const reader = new FileReader();
+                    reader.addEventListener('load', (e) => {
+                      console.log(e.target.result)
+                      setFile(e.target.result)
+                    });
+                    reader.readAsArrayBuffer(newFile);
+
+                  }
+                }}
+              />
+              {
+                file && ipfs &&
+                <Button onClick={uploadFile} label="Upload to IPFS" />
+              }
+            </Tab>
+            <Tab title="View Profiles">
+              <Box align="center" pad="small">
+
+              </Box>
+            </Tab>
+          </Tabs>
+
+
+          <FooterComponent />
+
+        </center>
+      )
+}
