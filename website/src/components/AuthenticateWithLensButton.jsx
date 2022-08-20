@@ -55,12 +55,14 @@ export default function AuthenticateWithLensButton() {
   });
 
   return isConnected ? (
-    <div>
-      <button disabled={loading} onClick={() => signMessage()}>
-        Connect with lens
-      </button>
-    </div>
+    <button
+      className="p-2 bg-zinc-800 text-white rounded-xl ml-2"
+      disabled={loading}
+      onClick={() => signMessage()}
+    >
+      Connect with lens
+    </button>
   ) : (
-    <div>Please connect with web3 wallet</div>
+    <div></div>
   );
 }
