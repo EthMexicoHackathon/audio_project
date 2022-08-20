@@ -17,7 +17,7 @@ const client = createClient(
   getDefaultClient({
     appName: "Your App Name",
     alchemyId,
-    chains: [chain.polygonMumbai, chain.localhost, chain.hardhat],
+    chains: [chain.polygonMumbai, chain.localhost, chain.hardhat, chain.goerli],
   })
 );
 
@@ -29,7 +29,7 @@ const App = () => {
           <Navbar />
           <SignMessageButton />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home client={client}/>} />
           </Routes>
         </BrowserRouter>
       </ConnectKitProvider>
