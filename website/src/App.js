@@ -21,6 +21,7 @@ import {
   ApolloLink,
   ApolloProvider,
 } from "@apollo/client";
+import CreateProfileForm from "./components/CreateProfileForm";
 
 const httpLink = new HttpLink({ uri: "https://api-mumbai.lens.dev/" });
 
@@ -68,6 +69,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/explore" element={<ExplorePublicationsTest />} />
+              <Route path="/create" element={<CreateProfileForm />} />
             </Routes>
           </BrowserRouter>
         </ConnectKitProvider>
