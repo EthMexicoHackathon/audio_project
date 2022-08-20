@@ -5,8 +5,12 @@ import {
   getDefaultClient,
 } from "connectkit";
 import { Buffer } from "buffer";
+import Navbar from "./components/Navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
 const alchemyId = "WxH_mAU0XciJz4PAFStdOYCvYTnXwTdz";
+
 if (!window.Buffer) window.Buffer = Buffer;
 
 const client = createClient(
@@ -20,8 +24,12 @@ const App = () => {
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
-        /* Your App */
-        <ConnectKitButton />
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </BrowserRouter>
       </ConnectKitProvider>
     </WagmiConfig>
   );
