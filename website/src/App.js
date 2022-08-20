@@ -45,6 +45,7 @@ import {apolloClient} from './functions/apollo-client';
 export default function App () {
   const [lensProfile,setLensProfile] = useState();
   const [lensT,setLensT] = useState();
+  const [message,setMessage] = useState();
   const [profileName,setProfileName] = useState();
   const [file,setFile] = useState();
   const [files,setFiles] = useState();
@@ -120,15 +121,34 @@ export default function App () {
   const uploadFile = async () => {
     // Upload to web3.storage (filecoin)
     // User can use his own key soon
+    setMessage(
+      <>
+      <Paragraph>
+        Uploading to <Anchor href="web3.storage" target="_blank" rel="noreferrer">Web3.Storage</Anchor>
+      </Paragraph>
+      <Spinner />
+      </>
+    );
     const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGFDYjNDRDM4RTRFQTVmMEFhNWQwOWM2RTQ1YUYwOGMzRkY2NUYzY0EiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NjEwMzAzNTkzNzYsIm5hbWUiOiJ0ZXN0SVBGUyJ9.HGBuR9-HTY4UX4EB3Imzdocz2JrYURnAYxffiizfXkE"
     const client = new Web3Storage({ token: testToken });
     const rootCid = await client.put(files, {
       name: `Test-${new Date().getTime().toString()}`,
       maxRetries: 3,
     });
+    setMessage(
+      <>
+      <Paragraph>
+        CID: <Anchor href={`https://nftstorage.link/ipfs/${rootCid}`} target="_blank" rel="noreferrer">Web3.Storage</Anchor>
+      </Paragraph>
+      </>
+    );
     console.log(rootCid)
     // Pin in your local node (browser node)
     console.log(await ipfs.pin.add(rootCid));
+
+    setTimeout(() => {
+      setMessage()
+    },5000)
   }
 
   useMemo(async () => {
@@ -209,6 +229,9 @@ export default function App () {
               {
                 file && ipfs &&
                 <Button onClick={uploadFile} label="Upload to IPFS" />
+              }
+              {
+                message
               }
             </Tab>
             <Tab title="View Profiles">
