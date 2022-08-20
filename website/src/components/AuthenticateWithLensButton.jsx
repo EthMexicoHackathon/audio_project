@@ -25,28 +25,26 @@ export default function AuthenticateWithLensButton() {
   const [authenticate] = useMutation(AUTHENTICATION, {
     variables: { request: { address, signature } },
     onCompleted: (data) => {
-      console.log(data);
+      console.log(`Authentication request result: ${JSON.stringify(data)}`);
       localStorage.setItem("accessToken", data.authenticate.accessToken);
       localStorage.setItem("refreshToken", data.authenticate.refreshToken);
     },
   });
 
-  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
+  const { signMessage } = useSignMessage({
     message: challenge,
     onSuccess: (signature) => {
-      console.log(signature);
-      console.log("success");
+      console.log(`Message signed with signature: ${signature}`);
       authenticate({ variables: { request: { address, signature } } });
     },
     onError: (error) => {
-      console.log("error");
-      console.log(error);
+      console.log(`Error signing message: ${error}`);
     },
   });
 
   const { loading, error } = useQuery(GET_CHALLENGE, {
     onCompleted: (data) => {
-      console.log(data.challenge.text);
+      console.log(`Challange received : ${data.challenge.text}`);
       setChallenge(data.challenge.text);
     },
     variables: {
