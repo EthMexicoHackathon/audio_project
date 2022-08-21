@@ -60,7 +60,7 @@ const client = createClient(
   getDefaultClient({
     appName: "Your App Name",
     alchemyId,
-    chains: [chain.polygonMumbai, chain.localhost, chain.hardhat],
+    chains: [chain.polygonMumbai, chain.localhost, chain.hardhat, chain.goerli],
   })
 );
 
@@ -73,6 +73,10 @@ const App = () => {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route
+                path="/explore"
+                element={<ExplorePublicationsTest client={client} />}
+              />
               <Route path="/explore" element={<ExplorePublicationsTest />} />
               <Route path="/profile" element={<CreateProfileForm />} />
               <Route path="/publish" element={<PublishSong />} />

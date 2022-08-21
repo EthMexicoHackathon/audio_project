@@ -29,6 +29,7 @@ export const EXPLORE_AUDIO_PUBLICATIONS = gql`
 
   fragment ProfileFields on Profile {
     id
+    ownedBy
     name
     isFollowedByMe
     isFollowing(who: null)
