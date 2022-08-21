@@ -7,6 +7,8 @@ import { GET_PROFILES } from "../graphql/getProfiles";
 import { useAccount } from "wagmi";
 import { splitSignature, signedTypeData } from "../utils/ethersService";
 import { lensHub } from "../utils/lensHub";
+import ReactHowler from "react-howler";
+import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
 
 function PublishSong(props) {
   const [files, setFiles] = useState();
@@ -14,6 +16,8 @@ function PublishSong(props) {
   const [message, setMessage] = useState();
   const { ipfs } = useIpfs();
   const [profile, setProfile] = useState();
+  const [publications, setPublications] = useState();
+
   const { address } = useAccount();
 
   const { data } = useQuery(GET_PROFILES, {
@@ -68,12 +72,11 @@ function PublishSong(props) {
     const typedData = typedDataRequest.data.createPostTypedData.typedData;
     console.log(typedData);
     const signature = await signedTypeData(
-      typedData.dodiv,
+      typedData.domain,
       typedData.types,
       typedData.value
     );
     const { v, r, s } = await splitSignature(signature);
-
     const tx = await lensHub.postWithSig({
       profileId: typedData.value.profileId,
       contentURI: typedData.value.contentURI,
@@ -96,61 +99,49 @@ function PublishSong(props) {
   };
 
   return (
-    <div class="flex items-center justify-center font-sans flex-col ">
-      <p className="font-semibold text-xl mb-6 text-center">Publish Song</p>
+    <div className="flex flex-col justify-center items-center">
+      <p className="text-2xl font-semibold mb-12 mt-6">Upload a new Song</p>
+      <input
+        type="file"
+        className="mb-12"
+        onChange={(event) => {
+          const fileList = event.target.files;
+          setFiles(fileList);
+          for (let i = 0; i < fileList.length; i += 1) {
+            const newFile = fileList[i];
+            const reader = new FileReader();
+            reader.addEventListener("load", (e) => {
+              console.log(e.target.result);
+              console.log(ipfs);
+              setFile(e.target.result);
+            });
+            reader.readAsArrayBuffer(newFile);
+            console.log(file);
+          }
+        }}
+      />
 
-      <label
-        for="dropzone-file"
-        class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 text-blue-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-          />
-        </svg>
-        <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">
-          Music File
-        </h2>
-        <p class="mt-2 text-gray-500 tracking-wide">
-          Upload or darg & drop your file MP3, WAV, ETC...
-        </p>
-        <input
-          type="file"
-          id="dropzone-file"
-          className="hidden"
-          onChange={(event) => {
-            const fileList = event.target.files;
-            setFiles(fileList);
-            for (let i = 0; i < fileList.length; i += 1) {
-              const newFile = fileList[i];
-              const reader = new FileReader();
-              reader.addEventListener("load", (e) => {
-                console.log(e.target.result);
-                console.log(ipfs);
-                setFile(e.target.result);
-              });
-              reader.readAsArrayBuffer(newFile);
-              console.log(file);
-            }
-          }}
-        />{" "}
-      </label>
       <button
+        className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg ml-1"
         disabled={!file}
-        className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg mt-2"
         onClick={createPublication}
       >
-        Publish Publication
+        Upload to IPFS
       </button>
+      {publications && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {publications.explorePublications.items.map((publication, i) => (
+            <div className="flex flex-col items-center justify-between w-72 h-72 bg-gradient-to-r from-indigo-500">
+              <h4 className="m-5 text-center">{publication.metadata.name}</h4>
+              <ReactHowler
+                src={publication.metadata.media[0].original.url}
+                playing={false}
+              />
+              <AiFillPlayCircle className="text-white mb-2 w-12 h-12" />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
