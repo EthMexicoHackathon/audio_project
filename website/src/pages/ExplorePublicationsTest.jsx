@@ -5,6 +5,8 @@ import { useAccount, useNetwork, useSigner } from "wagmi";
 import { Framework } from "@superfluid-finance/sdk-core";
 import ReactHowler from "react-howler";
 import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
+import { maticxABI } from "../config";
+import { ethers } from "ethers";
 
 export default function ExplorePublicationsTest({ client }) {
   const [play, setPlay] = useState(false);
@@ -24,6 +26,35 @@ export default function ExplorePublicationsTest({ client }) {
     },
   });
 
+  const getSomeFakeMoney = async (amt) => {
+    // matic testnet
+    const Maticx_address = "0x96B82B65ACF7072eFEb00502F45757F254c2a0D4";
+
+    const MATICx = new ethers.Contract(
+      Maticx_address,
+      maticxABI,
+      client.provider
+    );
+
+    try {
+      console.log(`upgrading ${amt} ETH to ETHx`);
+
+      const amtToUpgrade = ethers.utils.parseEther(amt.toString());
+      const reciept = await MATICx.connect(signer).upgradeByETH({
+        value: amtToUpgrade,
+      });
+      await reciept.wait().then(function (tx) {
+        console.log(
+          `
+          Congrats - you've just upgraded Matic to Maticx!
+        `
+        );
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const createNewFlow = async (receiver, i) => {
     console.log(receiver);
 
@@ -32,16 +63,14 @@ export default function ExplorePublicationsTest({ client }) {
       provider: client.provider,
     });
 
-    const DAIxContract = await sf.loadSuperToken("MATICx");
-    const DAIx = DAIxContract.address;
-
-    console.log(DAIxContract);
+    const MaticxContract = await sf.loadSuperToken("MATICx");
+    const Maticx = MaticxContract.address;
 
     try {
       const createFlowOperation = sf.cfaV1.createFlow({
         flowRate: "10000",
         receiver: receiver,
-        superToken: DAIx,
+        superToken: Maticx,
         // userData?: string
       });
 
@@ -54,7 +83,7 @@ export default function ExplorePublicationsTest({ client }) {
         `Congrats - you've just created a money stream!
         View Your Stream At: https://app.superfluid.finance/dashboard/0xF749F9B4de6887AFA6486Ff894d2cA07b6282163
         Network: Goerli
-        Super Token: DAIx
+        Super Token: Maticx
         Sender: ${address}
         Receiver: ${receiver}
         FlowRate: 10000
@@ -76,16 +105,16 @@ export default function ExplorePublicationsTest({ client }) {
       provider: client.provider,
     });
 
-    const DAIxContract = await sf.loadSuperToken("MATICx");
-    const DAIx = DAIxContract.address;
+    const MaticxContract = await sf.loadSuperToken("MATICx");
+    const Maticx = MaticxContract.address;
 
-    console.log(DAIx);
+    console.log(Maticx);
 
     try {
       const deleteFlowOperation = sf.cfaV1.deleteFlow({
         sender: address,
         receiver: recipent,
-        superToken: DAIx,
+        superToken: Maticx,
         // userData?: string
       });
 
@@ -96,7 +125,7 @@ export default function ExplorePublicationsTest({ client }) {
       console.log(
         `Congrats - you've just deleted your money stream!
          Network: Goerli
-         Super Token: DAIx
+         Super Token: Maticx
          Sender: ${recipent}
          Receiver: ${address}
       `
@@ -109,10 +138,12 @@ export default function ExplorePublicationsTest({ client }) {
   };
 
   return data ? (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="md:mx-20 grid sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-3">
       {data.explorePublications.items.map((publication, i) => (
-        <div className="flex flex-col items-center justify-between w-72 h-72 bg-gradient-to-r from-indigo-500">
-          <h4 className="m-5 text-center">{publication.metadata.name}</h4>
+        <div className="flex flex-col items-center justify-between w-56 h-56 lg:w-72 lg:h-72 bg-gradient-to-t from-indigo-500  to-blue-500  rounded-lg mt-5">
+          <h4 className="m-5 text-center text-white">
+            {publication.metadata.name}
+          </h4>
           <ReactHowler
             src={publication.metadata.media[0].original.url}
             playing={play}
@@ -136,6 +167,6 @@ export default function ExplorePublicationsTest({ client }) {
       ))}
     </div>
   ) : (
-    <div>Loading...</div>
+    <div className="flex justify-center items-center">Loading...</div>
   );
 }

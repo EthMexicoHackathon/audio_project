@@ -71,6 +71,7 @@ const App = () => {
         <ConnectKitProvider>
           <BrowserRouter>
             <Navbar />
+<<<<<<< HEAD
             <div className="bg-gradient-to-t from-gray-300 to-gray-50 min-h-screen">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -83,6 +84,18 @@ const App = () => {
                 <Route path="/publish" element={<PublishSong />} />
               </Routes>
             </div>
+=======
+            <Routes>
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route
+                path="/explore"
+                element={<ExplorePublicationsTest client={client} />}
+              />
+              <Route path="/explore" element={<ExplorePublicationsTest />} />
+              <Route path="/profile" element={<CreateProfileForm />} />
+              <Route path="/publish" element={<PublishSong />} />
+            </Routes>
+>>>>>>> 5693751 (new main clean)
           </BrowserRouter>
         </ConnectKitProvider>
       </ApolloProvider>

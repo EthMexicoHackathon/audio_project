@@ -11,7 +11,7 @@ const VERIFY = gql`
   }
 `;
 
-const locations = ["Explore", "Home", "Profile", "Publish"];
+const locations = ["Explore",  "Profile", "Publish"];
 
 function Navbar() {
   const accessToken = localStorage.getItem("auth_token") || "";
