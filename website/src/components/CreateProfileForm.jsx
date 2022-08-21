@@ -74,6 +74,11 @@ function CreateProfileForm() {
           <p className="text-xl font-semibold">
             {data.profiles.items[0].handle}
           </p>
+          <div>
+            Followers: {data.profiles.items[0].stats.totalFollowers} |
+            Following: {data.profiles.items[0].stats.totalFollowing} |
+            Publications: {data.profiles.items[0].stats.totalPublications}
+          </div>
         </div>
       ) : (
         <div className="flex flex-col w-1/2 justify-items-center  h-28 justify-between">
