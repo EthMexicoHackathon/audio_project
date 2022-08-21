@@ -4,6 +4,7 @@ import AuthenticateWithLensButton from "./AuthenticateWithLensButton";
 import { gql, useQuery } from "@apollo/client";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
 
 const VERIFY = gql`
   query ($request: VerifyRequest!) {
@@ -11,7 +12,7 @@ const VERIFY = gql`
   }
 `;
 
-const locations = ["Explore",  "Profile", "Publish"];
+const locations = ["Explore", "Profile", "Publish"];
 
 function Navbar() {
   const accessToken = localStorage.getItem("auth_token") || "";
@@ -29,10 +30,16 @@ function Navbar() {
   return (
     <div className="flex p-2 justify-between">
       <div className="flex ">
+        <img
+          src={Logo}
+          alt="logo"
+          onClick={() => navigate("/explore")}
+          className="w-12 ml-2 cursor-pointer  h-12"
+        />
         {locations.map((location) => (
           <p
             onClick={() => navigate(location)}
-            className="p-2 font-semibold cursor-pointer"
+            className="p-2 mt-0.5 font-semibold cursor-pointer"
           >
             {location}
           </p>
