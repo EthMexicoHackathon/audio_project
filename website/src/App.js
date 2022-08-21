@@ -74,7 +74,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/explore" element={<ExplorePublicationsTest />} />
-              <Route path="/create" element={<CreateProfileForm />} />
+              <Route path="/profile" element={<CreateProfileForm />} />
               <Route path="/publish" element={<PublishSong />} />
             </Routes>
           </BrowserRouter>
