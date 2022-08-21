@@ -24,13 +24,13 @@ function CreateProfileForm() {
   const [createProfile, { loading }] = useMutation(CREATE_PROFILE, {
     onCompleted: (data) => {
       console.log(data);
-      if (data.createaProfile.__typename === "RelayError") {
-        alert("Error creating profile: " + data.createProfile.reason);
+      if (data?.createaProfile?.__typename === "RelayError") {
+        alert("Error creating profile: " + data?.createProfile?.reason);
       } else {
         alert(
           "Profile created successfuly" +
             " tx hash: " +
-            data.createProfile.txHash
+            data?.createProfile?.txHash
         );
       }
     },
