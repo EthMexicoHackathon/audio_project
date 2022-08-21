@@ -2,23 +2,16 @@ import { useMemo, useState } from "react";
 import * as IPFS from "ipfs";
 function useIpfs() {
   const [ipfs, setIpfs] = useState();
-  const [ipfsErr, setIpfsErr] = useState();
+  const [connecting, setConneting] = useState(false);
+  useMemo(async () => {
+    if (connecting) return;
+    setConneting(true);
+    const newIpfs = await IPFS.create();
+    setIpfs(newIpfs);
+    console.log("IPFS started");
+  }, [connecting]);
 
-  useMemo(() => {
-    if (!ipfs) {
-      IPFS.create()
-        .then(async (newIpfs) => {
-          setIpfs(newIpfs);
-          console.log("IPFS started");
-        })
-        .catch((err) => {
-          console.log(err);
-          setIpfsErr(true);
-        });
-    }
-  }, [ipfs]);
-
-  return { ipfs, ipfsErr };
+  return { ipfs };
 }
 
 export default useIpfs;

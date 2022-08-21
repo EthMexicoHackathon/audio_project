@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Web3Storage } from "web3.storage";
-import useIpfs from "../hooks/useIpfs";
 
-function PublishSong() {
+import useIpfs from "../hooks/useIpfs";
+function PublishSong(props) {
   const [files, setFiles] = useState();
-  const { ipfs, ipfsErr } = useIpfs();
   const [file, setFile] = useState();
   const [message, setMessage] = useState();
+  const { ipfs } = useIpfs();
 
   const uploadFile = async () => {
     // Upload to web3.storage (filecoin)
@@ -20,7 +20,7 @@ function PublishSong() {
     });
 
     console.log(rootCid);
-    console.log(await ipfs.pin.add(rootCid));
+    //console.log(await ipfs.pin.add(rootCid));
 
     setTimeout(() => {
       setMessage(null);
@@ -29,6 +29,7 @@ function PublishSong() {
 
   return (
     <div>
+      <button onClick={() => console.log(ipfs)}>test</button>
       <input
         type="file"
         onChange={(event) => {
@@ -39,6 +40,7 @@ function PublishSong() {
             const reader = new FileReader();
             reader.addEventListener("load", (e) => {
               console.log(e.target.result);
+              console.log(ipfs);
               setFile(e.target.result);
             });
             reader.readAsArrayBuffer(newFile);
@@ -46,8 +48,7 @@ function PublishSong() {
           }
         }}
       />
-      {file && ipfs && <button onClick={uploadFile}>Upload to IPFS</button>}
-      PublishSong
+      {file && <button onClick={uploadFile}>Upload to IPFS</button>}
     </div>
   );
 }
