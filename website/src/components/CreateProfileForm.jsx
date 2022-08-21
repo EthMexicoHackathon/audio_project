@@ -23,6 +23,7 @@ function CreateProfileForm() {
 
   const [createProfile, { loading }] = useMutation(CREATE_PROFILE, {
     onCompleted: (data) => {
+      console.log(data);
       if (data.createaProfile.__typename === "RelayError") {
         alert("Error creating profile: " + data.createProfile.reason);
       } else {
@@ -39,6 +40,8 @@ function CreateProfileForm() {
     variables: {
       request: {
         handle,
+        profilePictureUri:
+          "https://bafybeiawwdmmimtxqnftb2pqxxl52fvigfqybtg4zles3wcza75kbnkxvu.ipfs.dweb.link/default_profile_image.png",
       },
     },
   });
@@ -55,26 +58,29 @@ function CreateProfileForm() {
   });
 
   return (
-    <div>
-      {data && data.profiles.items.length > 0 ? (
-        <div>{data.profiles.items[0].handle}</div>
-      ) : (
-        <>
-          <input
-            value={handle}
-            placeholder="Select handle"
-            className="border  border-gray-300 rounded-lg p-2"
-            onChange={(e) => setHandle(e.target.value)}
-          />
-          <button
-            disabled={loading}
-            className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg ml-1"
-            onClick={createProfile}
-          >
-            Create Profile
-          </button>
-        </>
-      )}
+    <div className="flex justify-center align-center">
+      <p>Your profile</p>
+      <div>
+        {data && data.profiles.items.length > 0 ? (
+          <div>Your profile handle: {data.profiles.items[0].handle}</div>
+        ) : (
+          <>
+            <input
+              value={handle}
+              placeholder="Select handle"
+              className="border  border-gray-300 rounded-lg p-2"
+              onChange={(e) => setHandle(e.target.value)}
+            />
+            <button
+              disabled={loading}
+              className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg ml-1"
+              onClick={createProfile}
+            >
+              Create Profile
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
