@@ -120,7 +120,7 @@ function PublishSong(props) {
           Music File
         </h2>
         <p class="mt-2 text-gray-500 tracking-wide">
-          Upload or darg & drop your file SVG, PNG, JPG or GIF.{" "}
+          Upload or darg & drop your file MP3, WAV, ETC...
         </p>
         <input
           type="file"
