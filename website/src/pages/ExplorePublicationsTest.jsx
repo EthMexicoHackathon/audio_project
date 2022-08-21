@@ -150,14 +150,14 @@ export default function ExplorePublicationsTest({ client }) {
           />
           {openedItem === i ? (
             <AiFillPauseCircle
-              className="text-white mb-2 w-12 h-12"
+              className="text-white mb-2 w-12 h-12 cursor-pointer"
               onClick={() => {
                 deleteFlow(publication.profile.ownedBy);
               }}
             />
           ) : (
             <AiFillPlayCircle
-              className="text-white mb-2 w-12 h-12"
+              className="text-white mb-2 w-12 h-12 cursor-pointer"
               onClick={() => {
                 createNewFlow(publication.profile.ownedBy, i);
               }}
