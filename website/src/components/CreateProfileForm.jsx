@@ -59,7 +59,7 @@ function CreateProfileForm() {
 
   return (
     <div className="flex flex-col justify-center text-center items-center">
-      <h2 className="text-3xl my-10">Your profile</h2>
+      <h2 className="text-3xl my-8">Your profile</h2>
       {data && data.profiles.items.length > 0 ? (
         <div className="flex flex-col justify-items-center">
           <img
@@ -72,7 +72,7 @@ function CreateProfileForm() {
 
           <p className="text-2xl">Your profile handle:</p>
           <p className="text-xl font-semibold">
-            {data.profiles.items[0].handle}
+            @{data.profiles.items[0].handle}
           </p>
           <div>
             Followers: {data.profiles.items[0].stats.totalFollowers} |
