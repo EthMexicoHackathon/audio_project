@@ -60,9 +60,20 @@ function CreateProfileForm() {
   return (
     <div className="flex flex-col justify-center items-center">
       <h2 className="text-3xl my-10">Your profile</h2>
-      <div className="w-1/2">
+      <div className="w-1/2 flex flex-col justify-items-center ">
         {data && data.profiles.items.length > 0 ? (
-          <div>Your profile handle: {data.profiles.items[0].handle}</div>
+          <div className="">
+            <img
+              className="rounded-xl w-24 "
+              src={
+                data.profiles?.items[0].picture?.original?.url ||
+                "https://bafybeiawwdmmimtxqnftb2pqxxl52fvigfqybtg4zles3wcza75kbnkxvu.ipfs.dweb.link/default_profile_image.png"
+              }
+            />
+
+            <p>Your profile handle:</p>
+            <p>{data.profiles.items[0].handle}</p>
+          </div>
         ) : (
           <div className="flex flex-col  h-28 justify-between">
             <input

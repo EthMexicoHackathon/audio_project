@@ -17,7 +17,7 @@ function PublishSong(props) {
   const { ipfs } = useIpfs();
   const [profile, setProfile] = useState();
   const [publications, setPublications] = useState();
-
+  const [title, setTitle] = useState("");
   const { address } = useAccount();
 
   const { data } = useQuery(GET_PROFILES, {
@@ -101,6 +101,12 @@ function PublishSong(props) {
   return (
     <div className="flex flex-col justify-center items-center">
       <p className="text-2xl font-semibold mb-12 mt-6">Upload a new Song</p>
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="border-b-gray-400 bg-gray-50 mb-6 border-b-2 text-center rounded-t-md text-xl font-semibold text-gray-700"
+        placeholder="Title"
+      />
       <input
         type="file"
         className="mb-12"
