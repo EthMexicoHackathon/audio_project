@@ -24,7 +24,7 @@ function Navbar() {
   return (
     <div className="flex p-2 justify-end">
       <ConnectKitButton />
-      {isConnected && data && !loading && data.verify ? (
+      {isConnected && data && data.verify ? (
         <div></div>
       ) : (
         <AuthenticateWithLensButton />

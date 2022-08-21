@@ -10,7 +10,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import SignMessageButton from "./components/SignMessageButton";
 import ExplorePublicationsTest from "./pages/ExplorePublicationsTest";
-
+import useIpfs from "./hooks/useIpfs";
+import PublishSong from "./components/PublishSong";
 // this is showing you how you use it with react for example
 // if your using node or something else you can import using
 // @apollo/client/core!
@@ -70,6 +71,7 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/explore" element={<ExplorePublicationsTest />} />
               <Route path="/create" element={<CreateProfileForm />} />
+              <Route path="/publish" element={<PublishSong />} />
             </Routes>
           </BrowserRouter>
         </ConnectKitProvider>

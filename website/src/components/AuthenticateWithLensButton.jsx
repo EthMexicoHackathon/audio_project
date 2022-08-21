@@ -19,12 +19,6 @@ const AUTHENTICATION = gql`
   }
 `;
 
-const VERIFY = gql`
-  query ($request: VerifyRequest!) {
-    verify(request: $request)
-  }
-`;
-
 export default function AuthenticateWithLensButton() {
   const { address, isConnected } = useAccount();
   const [challenge, setChallenge] = useState("");
