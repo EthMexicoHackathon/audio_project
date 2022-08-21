@@ -26,3 +26,5 @@ This proof of concept uses Lens Protocol to allow users to create their profile 
 We used ConnectKit for connecting wallets. It allows us to connect using WalletConnect, Metamask and other wallets. For the frontend we used Create-React-App and added tailwind css for styling. We connected the app to lens protocol and allowed users to signin with lens, create profiles, and make publications. We use Apollo client for fetching data and making mutations to the lens protocol. For streaming of revenue to authors of a song we use SuperFluid and the app lives on the polygon mumbai blockchain. For storage of metadata we use IPFS.
 
 # Demo
+
+[https://bafybeicd7oah747wjick2qqltdqwj6vnwqnhpwivx3w6534waideokrqcu.ipfs.nftstorage.link/demoDapp10.mp4](https://bafybeicd7oah747wjick2qqltdqwj6vnwqnhpwivx3w6534waideokrqcu.ipfs.nftstorage.link/demoDapp10.mp4)
