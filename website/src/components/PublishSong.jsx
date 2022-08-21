@@ -132,7 +132,7 @@ function PublishSong(props) {
         disabled={!file}
         onClick={createPublication}
       >
-        Upload to IPFS
+        Upload to IPFS & Publish
       </button>
       {publications && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

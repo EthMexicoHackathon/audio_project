@@ -58,40 +58,40 @@ function CreateProfileForm() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center text-center items-center">
       <h2 className="text-3xl my-10">Your profile</h2>
-      <div className="w-1/2 flex flex-col justify-items-center ">
-        {data && data.profiles.items.length > 0 ? (
-          <div className="">
-            <img
-              className="rounded-xl w-24 "
-              src={
-                data.profiles?.items[0].picture?.original?.url ||
-                "https://bafybeiawwdmmimtxqnftb2pqxxl52fvigfqybtg4zles3wcza75kbnkxvu.ipfs.dweb.link/default_profile_image.png"
-              }
-            />
+      {data && data.profiles.items.length > 0 ? (
+        <div className="flex flex-col justify-items-center">
+          <img
+            className="rounded-full h-24 object-center mx-auto   w-24 "
+            src={
+              data.profiles?.items[0].picture?.original?.url ||
+              "https://bafybeiawwdmmimtxqnftb2pqxxl52fvigfqybtg4zles3wcza75kbnkxvu.ipfs.dweb.link/default_profile_image.png"
+            }
+          />
 
-            <p>Your profile handle:</p>
-            <p>{data.profiles.items[0].handle}</p>
-          </div>
-        ) : (
-          <div className="flex flex-col  h-28 justify-between">
-            <input
-              value={handle}
-              placeholder="Select handle"
-              className="border  border-gray-300 rounded-lg p-2"
-              onChange={(e) => setHandle(e.target.value)}
-            />
-            <button
-              disabled={loading}
-              className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg ml-1"
-              onClick={createProfile}
-            >
-              Create Profile
-            </button>
-          </div>
-        )}
-      </div>
+          <p className="text-2xl">Your profile handle:</p>
+          <p className="text-xl font-semibold">
+            {data.profiles.items[0].handle}
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col w-1/2 justify-items-center  h-28 justify-between">
+          <input
+            value={handle}
+            placeholder="Select handle"
+            className="border  border-gray-300 rounded-lg p-2"
+            onChange={(e) => setHandle(e.target.value)}
+          />
+          <button
+            disabled={loading}
+            className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg ml-1"
+            onClick={createProfile}
+          >
+            Create Profile
+          </button>
+        </div>
+      )}
     </div>
   );
 }
