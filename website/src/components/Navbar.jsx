@@ -28,9 +28,12 @@ function Navbar() {
 
   return (
     <div className="flex p-2 justify-between">
-      <div className="flex">
+      <div className="flex ">
         {locations.map((location) => (
-          <p onClick={() => navigate(location)} className="p-2 cursor-pointer">
+          <p
+            onClick={() => navigate(location)}
+            className="p-2 font-semibold cursor-pointer"
+          >
             {location}
           </p>
         ))}
