@@ -71,16 +71,18 @@ const App = () => {
         <ConnectKitProvider>
           <BrowserRouter>
             <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/explore"
-                element={<ExplorePublicationsTest client={client} />}
-              />
-              <Route path="/explore" element={<ExplorePublicationsTest />} />
-              <Route path="/profile" element={<CreateProfileForm />} />
-              <Route path="/publish" element={<PublishSong />} />
-            </Routes>
+            <div className="bg-gradient-to-t from-gray-300 to-gray-50 min-h-screen">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route
+                  path="/explore"
+                  element={<ExplorePublicationsTest client={client} />}
+                />
+                <Route path="/explore" element={<ExplorePublicationsTest />} />
+                <Route path="/profile" element={<CreateProfileForm />} />
+                <Route path="/publish" element={<PublishSong />} />
+              </Routes>
+            </div>
           </BrowserRouter>
         </ConnectKitProvider>
       </ApolloProvider>
