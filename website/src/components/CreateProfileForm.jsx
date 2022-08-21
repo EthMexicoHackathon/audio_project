@@ -58,13 +58,13 @@ function CreateProfileForm() {
   });
 
   return (
-    <div className="flex justify-center align-center">
-      <p>Your profile</p>
-      <div>
+    <div className="flex flex-col justify-center items-center">
+      <h2 className="text-3xl my-10">Your profile</h2>
+      <div className="w-1/2">
         {data && data.profiles.items.length > 0 ? (
           <div>Your profile handle: {data.profiles.items[0].handle}</div>
         ) : (
-          <>
+          <div className="flex flex-col  h-28 justify-between">
             <input
               value={handle}
               placeholder="Select handle"
@@ -78,7 +78,7 @@ function CreateProfileForm() {
             >
               Create Profile
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>
