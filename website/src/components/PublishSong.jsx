@@ -15,6 +15,7 @@ function PublishSong(props) {
   const { ipfs } = useIpfs();
   const [profile, setProfile] = useState();
   const { address } = useAccount();
+  const [title, setTitle] = useState("");
 
   const { data } = useQuery(GET_PROFILES, {
     onCompleted: (data) => {
@@ -96,8 +97,14 @@ function PublishSong(props) {
   };
 
   return (
-    <div class="flex items-center justify-center  font-sans flex-col">
-      <p className="font-semibold text-xl mb-12">Publish new song</p>
+    <div class="flex items-center justify-center  font-sans flex-col ">
+      <p className="font-semibold text-xl mb-6 text-center">Publish Song</p>
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="border-b-gray-400 mb-6 border-b-2 text-center rounded-t-md text-xl font-semibold text-gray-700"
+        placeholder="Title"
+      />
       <label
         for="dropzone-file"
         class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center"
@@ -143,14 +150,13 @@ function PublishSong(props) {
           }}
         />{" "}
       </label>
-      {file && (
-        <button
-          className="p-2 bg-zinc-800 text-white rounded-xl mt-2"
-          onClick={createPublication}
-        >
-          Publish Publication
-        </button>
-      )}
+      <button
+        disabled={!file}
+        className="p-2 bg-zinc-800 disabled:bg-zinc-500 text-white rounded-lg mt-2"
+        onClick={createPublication}
+      >
+        Publish Publication
+      </button>
     </div>
   );
 }
