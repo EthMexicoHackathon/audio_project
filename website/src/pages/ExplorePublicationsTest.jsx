@@ -8,6 +8,7 @@ import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
 
 export default function ExplorePublicationsTest({ client }) {
   const [play, setPlay] = useState(false);
+  const [openedItem, setOpenedItem] = useState(null);
 
   const { data, loading, error } = useQuery(EXPLORE_AUDIO_PUBLICATIONS, {
     onCompleted: (data) => {
@@ -23,13 +24,15 @@ export default function ExplorePublicationsTest({ client }) {
     },
   });
 
-  const createNewFlow = async () => {
+  const createNewFlow = async (receiver, i) => {
+    console.log(receiver);
+
     const sf = await Framework.create({
       chainId: chain.id,
       provider: client.provider,
     });
 
-    const DAIxContract = await sf.loadSuperToken("fDAIx");
+    const DAIxContract = await sf.loadSuperToken("MATICx");
     const DAIx = DAIxContract.address;
 
     console.log(DAIxContract);
@@ -37,7 +40,7 @@ export default function ExplorePublicationsTest({ client }) {
     try {
       const createFlowOperation = sf.cfaV1.createFlow({
         flowRate: "10000",
-        receiver: "0xF749F9B4de6887AFA6486Ff894d2cA07b6282163",
+        receiver: receiver,
         superToken: DAIx,
         // userData?: string
       });
@@ -52,11 +55,12 @@ export default function ExplorePublicationsTest({ client }) {
         View Your Stream At: https://app.superfluid.finance/dashboard/0xF749F9B4de6887AFA6486Ff894d2cA07b6282163
         Network: Goerli
         Super Token: DAIx
-        Sender: "${address}"
-        Receiver: "0xF749F9B4de6887AFA6486Ff894d2cA07b6282163",
+        Sender: ${address}
+        Receiver: ${receiver}
         FlowRate: 10000
         `
       );
+      setOpenedItem(i);
       setPlay(!play);
     } catch (error) {
       console.log(
@@ -66,13 +70,13 @@ export default function ExplorePublicationsTest({ client }) {
     }
   };
 
-  const deleteFlow = async ({ recipient }) => {
+  const deleteFlow = async (recipent) => {
     const sf = await Framework.create({
       chainId: chain.id,
       provider: client.provider,
     });
 
-    const DAIxContract = await sf.loadSuperToken("fDAIx");
+    const DAIxContract = await sf.loadSuperToken("MATICx");
     const DAIx = DAIxContract.address;
 
     console.log(DAIx);
@@ -80,7 +84,7 @@ export default function ExplorePublicationsTest({ client }) {
     try {
       const deleteFlowOperation = sf.cfaV1.deleteFlow({
         sender: address,
-        receiver: "0xF749F9B4de6887AFA6486Ff894d2cA07b6282163",
+        receiver: recipent,
         superToken: DAIx,
         // userData?: string
       });
@@ -93,43 +97,42 @@ export default function ExplorePublicationsTest({ client }) {
         `Congrats - you've just deleted your money stream!
          Network: Goerli
          Super Token: DAIx
-         Sender: "0xF749F9B4de6887AFA6486Ff894d2cA07b6282163"
-         Receiver: "${recipient}"
+         Sender: ${recipent}
+         Receiver: ${address}
       `
       );
       setPlay(!play);
+      setOpenedItem(null);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const PlayOrPauseView = ({ publication, index }) => {
-    return (
-      <div className="mb-2">
-        <h4>{publication.metadata.name}</h4>
-        <ReactHowler
-          src={publication.metadata.media[0].original.url}
-          playing={play}
-        />
-        {!play ? (
-          <AiFillPlayCircle
-            className="w-12 h-12"
-            onClick={() => createNewFlow()}
-          />
-        ) : (
-          <AiFillPauseCircle
-            className="w-12 h-12"
-            onClick={() => deleteFlow()}
-          />
-        )}
-      </div>
-    );
-  };
-
   return data ? (
-    <div>
-      {data.explorePublications.items.map((publication, index) => (
-        <PlayOrPauseView key={index} publication={publication} />
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {data.explorePublications.items.map((publication, i) => (
+        <div className="flex flex-col items-center justify-between w-72 h-72 bg-gradient-to-r from-indigo-500">
+          <h4 className="m-5 text-center">{publication.metadata.name}</h4>
+          <ReactHowler
+            src={publication.metadata.media[0].original.url}
+            playing={play}
+          />
+          {openedItem === i ? (
+            <AiFillPauseCircle
+              className="text-white mb-2 w-12 h-12"
+              onClick={() => {
+                deleteFlow(publication.profile.ownedBy);
+              }}
+            />
+          ) : (
+            <AiFillPlayCircle
+              className="text-white mb-2 w-12 h-12"
+              onClick={() => {
+                createNewFlow(publication.profile.ownedBy, i);
+              }}
+            />
+          )}
+        </div>
       ))}
     </div>
   ) : (
